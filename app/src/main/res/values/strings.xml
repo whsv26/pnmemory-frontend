@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Pnmemory Frontend</string>
-    <!--    <string name="fcm_token"></string>-->
+    <string name="jwt_token"/>
+    <string name="fcm_token"/>
 </resources>
