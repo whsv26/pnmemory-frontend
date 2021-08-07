@@ -1,5 +1,8 @@
 package org.whsv26.pnmemory.data
 
+import arrow.core.Either
+import arrow.core.left
+import arrow.core.right
 import org.whsv26.pnmemory.data.model.LoggedInUser
 import java.io.IOException
 
@@ -8,13 +11,12 @@ import java.io.IOException
  */
 class LoginDataSource {
 
-  fun login(username: String, password: String): Result<LoggedInUser> {
-    try {
-      // TODO: handle loggedInUser authentication
-      val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), "Jane Doe")
-      return Result.Success(fakeUser)
+  fun login(username: String, password: String): Either<IOException, LoggedInUser> {
+    return try {
+      val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), username)
+      fakeUser.right()
     } catch (e: Throwable) {
-      return Result.Error(IOException("Error logging in", e))
+      IOException("Error logging in", e).left()
     }
   }
 
