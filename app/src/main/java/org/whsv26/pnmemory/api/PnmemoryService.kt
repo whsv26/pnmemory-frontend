@@ -1,6 +1,7 @@
 package org.whsv26.pnmemory.api
 
 import arrow.core.Either
+import arrow.core.flatMap
 import com.github.kittinunf.fuel.core.*
 import com.github.kittinunf.fuel.core.deserializers.EmptyDeserializer
 import com.github.kittinunf.fuel.gson.jsonBody
@@ -10,7 +11,7 @@ import org.whsv26.pnmemory.api.request.LogInRequest
 import org.whsv26.pnmemory.api.request.RefreshFcmTokenRequest
 import com.github.kittinunf.result.Result as FuelResult
 
-typealias Result<R> = Either<Exception, R>
+typealias Outcome<T> = Either<Throwable, T>
 
 class PnmemoryService {
 
@@ -29,10 +30,18 @@ class PnmemoryService {
     { component1()!! }
   )
 
-  suspend fun login(request: LogInRequest): ResponseOf<Unit> =
-    "public/token".httpPost().jsonBody(request).awaitResponse(EmptyDeserializer)
+  suspend fun login(request: LogInRequest): Outcome<String> {
+    val (_, response, result) = "public/token".httpPost()
+      .jsonBody(request)
+      .awaitResponseResult(EmptyDeserializer)
 
-  suspend fun refreshFcmToken(jwt: String, request: RefreshFcmTokenRequest): Result<Unit> =
+    return result.toEither().flatMap { Either.catch {
+      response.headers.getValue("Authorization").first()
+    } }
+  }
+
+
+  suspend fun refreshFcmToken(jwt: String, request: RefreshFcmTokenRequest): Outcome<Unit> =
     "fcm/refresh".httpPut().authorize(jwt).jsonBody(request).awaitResult(EmptyDeserializer).toEither()
 
 }

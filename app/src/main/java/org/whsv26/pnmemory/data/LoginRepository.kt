@@ -1,37 +1,15 @@
 package org.whsv26.pnmemory.data
 
-import org.whsv26.pnmemory.data.model.LoggedInUser
+import org.whsv26.pnmemory.api.PnmemoryService
+import org.whsv26.pnmemory.api.Outcome
+import org.whsv26.pnmemory.api.request.LogInRequest
+import javax.inject.Inject
 
-/**
- * Class that requests authentication and user information from the remote data source and
- * maintains an in-memory cache of login status and user credentials information.
- */
+class LoginRepository @Inject constructor(private val backend: PnmemoryService) {
 
-class LoginRepository(val dataSource: LoginDataSource) {
+  fun logout(): Unit = TODO()
 
-  // in-memory cache of the loggedInUser object
-  var user: LoggedInUser? = null
-    private set
-
-  val isLoggedIn: Boolean
-    get() = user != null
-
-  init {
-    // If user credentials will be cached in local storage, it is recommended it be encrypted
-    // @see https://developer.android.com/training/articles/keystore
-    user = null
-  }
-
-  fun logout() {
-    user = null
-    dataSource.logout()
-  }
-
-  fun login(username: String, password: String): Result<LoggedInUser> = TODO()
-
-  private fun setLoggedInUser(loggedInUser: LoggedInUser) {
-    this.user = loggedInUser
-    // If user credentials will be cached in local storage, it is recommended it be encrypted
-    // @see https://developer.android.com/training/articles/keystore
+  suspend fun login(username: String, password: String): Outcome<String> {
+    return backend.login(LogInRequest(username, password))
   }
 }

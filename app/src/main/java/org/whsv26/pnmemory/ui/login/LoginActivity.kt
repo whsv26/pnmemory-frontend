@@ -1,8 +1,8 @@
 package org.whsv26.pnmemory.ui.login
 
 import android.app.Activity
+import android.content.Context
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -12,13 +12,14 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.viewModels
+import arrow.core.Either
 import org.whsv26.pnmemory.databinding.ActivityLoginBinding
-
 import org.whsv26.pnmemory.R
 
 class LoginActivity : AppCompatActivity() {
 
-  private lateinit var loginViewModel: LoginViewModel
+  private val loginViewModel by viewModels<LoginViewModel>()
   private lateinit var binding: ActivityLoginBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,9 +32,6 @@ class LoginActivity : AppCompatActivity() {
     val password = binding.password
     val login = binding.login
     val loading = binding.loading
-
-    loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
-      .get(LoginViewModel::class.java)
 
     loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
       val loginState = it ?: return@Observer
@@ -53,11 +51,9 @@ class LoginActivity : AppCompatActivity() {
       val loginResult = it ?: return@Observer
 
       loading.visibility = View.GONE
-      if (loginResult.error != null) {
-        showLoginFailed(loginResult.error)
-      }
-      if (loginResult.success != null) {
-        updateUiWithUser(loginResult.success)
+      when (loginResult) {
+        is Either.Right -> saveJwtToken(loginResult.value)
+        is Either.Left -> showLoginFailed(R.string.login_failed)
       }
       setResult(Activity.RESULT_OK)
 
@@ -98,19 +94,13 @@ class LoginActivity : AppCompatActivity() {
     }
   }
 
-  private fun updateUiWithUser(model: LoggedInUserView) {
-    val welcome = getString(R.string.welcome)
-    val displayName = model.displayName
-    // TODO : initiate successful logged in experience
-    Toast.makeText(
-      applicationContext,
-      "$welcome $displayName",
-      Toast.LENGTH_LONG
-    ).show()
-  }
-
   private fun showLoginFailed(@StringRes errorString: Int) {
     Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+  }
+
+  private fun saveJwtToken(jwt: String) {
+    val tokenPreferences = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+    tokenPreferences.edit().putString("jwt_token", jwt).apply()
   }
 }
 
