@@ -6,11 +6,13 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import com.google.firebase.installations.FirebaseInstallations
+import dagger.hilt.android.AndroidEntryPoint
 import org.whsv26.pnmemory.api.Backend
 import org.whsv26.pnmemory.api.request.RefreshFcmTokenRequest
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
