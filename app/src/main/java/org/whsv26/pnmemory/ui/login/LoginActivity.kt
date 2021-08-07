@@ -14,9 +14,11 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import arrow.core.Either
+import dagger.hilt.android.AndroidEntryPoint
 import org.whsv26.pnmemory.databinding.ActivityLoginBinding
 import org.whsv26.pnmemory.R
 
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
   private val loginViewModel by viewModels<LoginViewModel>()

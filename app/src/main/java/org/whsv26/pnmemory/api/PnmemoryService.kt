@@ -7,6 +7,8 @@ import com.github.kittinunf.fuel.core.deserializers.EmptyDeserializer
 import com.github.kittinunf.fuel.gson.jsonBody
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.httpPut
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.whsv26.pnmemory.api.request.LogInRequest
 import org.whsv26.pnmemory.api.request.RefreshFcmTokenRequest
 import com.github.kittinunf.result.Result as FuelResult
@@ -30,18 +32,20 @@ class PnmemoryService {
     { component1()!! }
   )
 
-  suspend fun login(request: LogInRequest): Outcome<String> {
+  suspend fun login(request: LogInRequest): Outcome<String> = withContext(Dispatchers.IO) {
     val (_, response, result) = "public/token".httpPost()
       .jsonBody(request)
       .awaitResponseResult(EmptyDeserializer)
 
-    return result.toEither().flatMap { Either.catch {
+    result.toEither().flatMap { Either.catch {
       response.headers.getValue("Authorization").first()
     } }
   }
 
-
-  suspend fun refreshFcmToken(jwt: String, request: RefreshFcmTokenRequest): Outcome<Unit> =
-    "fcm/refresh".httpPut().authorize(jwt).jsonBody(request).awaitResult(EmptyDeserializer).toEither()
+  suspend fun refreshFcmToken(jwt: String, request: RefreshFcmTokenRequest): Outcome<Unit> {
+    return withContext(Dispatchers.IO) {
+      "fcm/refresh".httpPut().authorize(jwt).jsonBody(request).awaitResult(EmptyDeserializer).toEither()
+    }
+  }
 
 }
