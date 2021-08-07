@@ -7,9 +7,10 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
     <Button
+            android:id="@+id/button_refresh_rcm_token"
             android:text="Refresh token"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/button_refresh_rcm_token"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintVertical_bias="0.499" app:layout_constraintEnd_toEndOf="parent"/>

@@ -7,7 +7,6 @@ import com.github.kittinunf.fuel.core.deserializers.EmptyDeserializer
 import com.github.kittinunf.fuel.gson.jsonBody
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.fuel.httpPut
-import org.whsv26.pnmemory.api.request.LogInRequest
 import org.whsv26.pnmemory.api.request.RefreshFcmTokenRequest
 
 object Backend {
@@ -28,9 +27,9 @@ object Backend {
     return apply { authorize(preference) }
   }
 
-  suspend fun login(request: LogInRequest): ResponseOf<Unit> {
-    return "public/token".httpPost().jsonBody(request).awaitResponse(EmptyDeserializer)
-  }
+//  suspend fun login(request: LogInRequest): ResponseOf<Unit> {
+//    return "public/token".httpPost().jsonBody(request).awaitResponse(EmptyDeserializer)
+//  }
 
   suspend fun refreshFcmToken(request: RefreshFcmTokenRequest) {
     "fcm/refresh".httpPut().jsonBody(request).awaitUnit()

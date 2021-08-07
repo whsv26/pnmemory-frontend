@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
 
     // TODO Drop hardcoded token
-    val jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ3aHN2MjZAZ21haWwuY29tIiwiaXNzIjoid2hzdjI2IiwiaWF0IjoxNjI4MTAwOTA0LCJleHAiOjE2Mjg3MDU3MDR9.kujKOzdaCt-3P7jznJDXIpGCmrHLkNzbwoQ4x8_HfJDlLm1LgM8uDE1ifK8MOQwPi2WIpv9yvnCgxwuAy_9_9Q"
+    val jwtToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ3aHN2MjZAZ21haWwuY29tIiwiaXNzIjoid2hzdjI2IiwiaWF0IjoxNjI4MjY1NjY5LCJleHAiOjE2Mjg4NzA0Njl9.sc2_-7iGNSQIWdwH1-D9xiKDZFOpmzeEsUoL4o2BN5pjIclIGjujUwX-uxKihksaIUoorg3uVyTWjSuyw1xaCQ"
     val tokenPreferences = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
 
     tokenPreferences.edit().putString("jwt_token", jwtToken).apply()
